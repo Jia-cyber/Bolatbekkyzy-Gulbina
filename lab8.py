@@ -38,7 +38,7 @@ while running:
     milliseconds = clock.tick(FPS)  # milliseconds passed since last frame
     seconds = milliseconds / 1000.0
     playtime += seconds
-    #screen.blit(background, (0, 0))
+    screen.blit(background, (0, 0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
