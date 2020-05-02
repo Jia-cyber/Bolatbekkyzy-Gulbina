@@ -1,0 +1,210 @@
+import pygame 
+from enum import Enum
+
+pygame.init()
+screen = pygame.display.set_mode((1200, 600))
+background_image=pygame.image.load('background_image.bmp')
+#background_image.fill((192, 192, 192))
+gameover_image=pygame.image.load('gameover_image.bmp')
+boom_image = pygame.image.load('boom).png')
+pew = pygame.mixer.Sound('pew.wav') 
+bang = pygame.mixer.Sound('bang.wav')
+
+class Direction(Enum):
+    UP = 1
+    DOWN = 2
+    LEFT = 3
+    RIGHT = 4
+
+class Tank():
+    def __init__(self, x, u, y, speed, color, d_right=pygame.K_RIGHT, d_left=pygame.K_LEFT, d_up=pygame.K_UP, d_down=pygame.K_DOWN):
+        self.x = x
+        self.y = y
+        self.u = u
+        self.width = 40
+        self.direction = Direction.DOWN
+        self.speed = 2
+        self.color = color
+        self.KEY  = {d_right: Direction.RIGHT, d_left: Direction.LEFT,
+                    d_up: Direction.UP, d_down: Direction.DOWN}
+        self.counter = 4
+    
+    def draw(self):
+        tank_c = (self.x + int(self.width / 2), self.y + int(self.width / 2))
+        pygame.draw.rect(screen,self.color ,(self.x, self.y, self.width, self.width)) #rect of the tank
+        pygame.draw.circle(screen, (105, 105, 105), tank_c, int(self.width / 2)) #circle inside of the rect
+
+        if self.direction == Direction.RIGHT:
+            pygame.draw.line(screen, (105, 105, 105), tank_c, (self.x + self.width + int(self.width / 2), self.y + int(self.width / 2)), 6)
+        
+        if self.direction == Direction.LEFT:
+            pygame.draw.line(screen, (105, 105, 105), tank_c, (self.x - int(self.width / 2), self.y + int(self.width / 2)), 6)
+            
+        if self.direction == Direction.UP:
+            pygame.draw.line(screen, (105, 105, 105), tank_c, (self.x + int(self.width / 2), self.y - int(self.width / 2)), 6)
+           
+        if self.direction == Direction.DOWN:
+            pygame.draw.line(screen, (105, 105, 105), tank_c, (self.x + int(self.width / 2), self.y + self.width + int(self.width / 2)), 6)
+
+    def change_direction(self, direction):
+        self.direction = direction
+    
+    def move(self, seconds):
+        self.x += self.speed * int(seconds)
+        self.y += self.speed * int(seconds)
+        if self.direction == Direction.RIGHT:
+            self.x += self.speed
+            if self.x > 1180:
+               self.x = 0 
+        if self.direction == Direction.LEFT:
+            self.x -= self.speed
+            if self.x < 0:
+                self.x = 1200
+        if self.direction == Direction.UP:
+            self.y -= self.speed
+            if self.y < 0:
+                self.y = 600
+        if self.direction == Direction.DOWN:
+            self.y += self.speed
+            if self.y > 580:
+                self.y = 0
+        self.draw()
+
+    def chances(self, string, a):
+        if a != 2:
+            font = pygame.font.SysFont("Calibri", 40)
+            score = font.render(string + ":" + str(self.counter), True, (self.color))
+            screen.blit(score, (1020, self.u))
+
+    def boom(self):
+        if(self.counter == 0):
+            return True
+        return False
+
+    def play_mus(self, a):
+        if a == 0:
+            bang.play()
+
+    def speed_0(self):
+        if self.speed == 0 and self.width != 0:
+            return True
+        return False
+
+class Bullet():
+    def __init__ (self, x, y, color, enemy):
+        self.x = x
+        self.y = y
+        self.color = color
+        self.speed = 15
+        self.enemy = enemy
+        self.radius = 4
+        self.dx = 0
+        self.dy = 0
+        
+    def draw(self):
+        pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius)
+    
+    def fire(self,x,y):
+        if self.enemy==True:
+            self.x += self.dx
+            self.y += self.dy
+            self.draw()
+
+    def move_bull(self, Tank):
+        pew.play()
+        if Tank.direction == Direction.RIGHT:
+            self.x,self.y = Tank.x + int(Tank.width / 2), Tank.y + int(Tank.width / 2)
+            self.dx, self.dy = self .speed, 0
+        if Tank.direction == Direction.LEFT:
+            self.x,self.y=Tank.x + int(Tank.width / 2), Tank.y + int(Tank.width / 2)
+            self.dx, self.dy =- self .speed, 0
+        if Tank.direction == Direction.UP:
+            self.x, self.y = Tank.x + int(Tank.width / 2), Tank.y + int(Tank.width / 2)
+            self.dx, self.dy = 0, -self .speed
+        if Tank.direction == Direction.DOWN:
+            self.x,self.y = Tank.x + int(Tank.width / 2), Tank.y + int(Tank.width / 2)
+            self.dx,self.dy = 0, self .speed
+
+    def corner(self): 
+        if self.x >= 1200 or self.x <= 0 or self.y >= 600 or self.y <= 0:
+            return True
+        return False
+
+    def aim(self, Tank):
+        if(self.x > Tank.x and self.x < Tank.x + Tank.width) and (self.y > Tank.y and self.y < Tank.y + Tank.width):
+            return True
+        return False
+    
+bullet_1 = Bullet(300,  300, (255, 0, 0), False)
+bullet_2 = Bullet(100,  100, (128, 0, 128), False)
+tank1 = Tank(300, 15, 300, 5, (255, 0, 0))
+tank2 = Tank(100, 50, 100, 5, (128, 0, 128), pygame.K_d, pygame.K_a, pygame.K_w, pygame.K_s)
+tanks = [tank1,tank2]
+bullets = [bullet_1, bullet_2]
+speed = 2 
+a = 0
+clock = pygame.time.Clock() 
+FPS = 60
+cnt = 0
+run = True 
+while run:
+    milliseconds = clock.tick(FPS) 
+    seconds = milliseconds / 1000.0 
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                run = False
+            if event.key == pygame.K_RETURN:
+                if not bullet_1.enemy: 
+                    bullet_1.enemy = True
+                    bullet_1.move_bull(tank1)
+            if event.key == pygame.K_SPACE:
+                if not bullet_2.enemy:
+                    bullet_2.enemy = True
+                    bullet_2.move_bull(tank2)
+            for tank in tanks:
+                if event.key in tank.KEY.keys():
+                    tank.change_direction(tank.KEY[event.key])
+    
+    for bullet in bullets:
+        if bullet.corner() == True:
+            bullet.enemy = False
+
+    if bullet_1.aim(tank2) == True:
+        tank2.counter -= 1
+        bullet_1.enemy = False
+        bullet_1.x, bullet_1.y = tank1.x + int(tank1.width / 2), tank1.y + int(tank1.width / 2) 
+        
+    if bullet_2.aim(tank1) == True:
+        tank1.counter -= 1
+        bullet_2.enemy = False
+        bullet_2.x, bullet_2.y = tank2.x + int(tank2.width / 2), tank2.y + int(tank2.width / 2)
+
+    screen.blit(background_image, (0, 0))
+    
+    for tank in tanks:
+        tank.move(seconds)
+        tank.draw()
+        if tank.boom() == True:
+            tank.speed = 0
+            cnt += 1
+        if tank.speed_0() == True:
+            screen.blit(boom_image, (tank.x-30, tank.y-20))
+            tank.play_mus(a)
+            a = 2
+    
+    tank1.chances("Player_1", a)
+    tank2.chances('Player_2', a)
+
+    if(cnt >= 80):
+        background_image=gameover_image
+        tank1.speed,tank2.speed = 0, 0
+        tank1.width,tank2.width = 0, 0
+    
+    bullet_1.fire(tank2.x + int(tank2.width / 2), tank2.y + int(tank2.width / 2))    
+    bullet_2.fire(tank1.x + int(tank1.width / 2), tank1.y + int(tank1.width / 2))
+    pygame.display.update()
+
+pygame.quit()
