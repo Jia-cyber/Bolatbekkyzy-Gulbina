@@ -1,0 +1,104 @@
+package problem5;
+
+//I = I1 = I2 = I3 = ...
+// V = V1 + V2 + V3 +...
+
+public class Series extends Circuit{
+	
+	private double potentialDifference;
+	private double resistance;
+	private double current;
+	Resistor resis1 = new Resistor();
+	Resistor resis2 = new Resistor();
+	Circuit a;
+	Circuit b;
+
+	public Series() { }
+	
+	public Series(Circuit a, Circuit b) {
+		this.a = a;
+		this.b = b;
+		this.resistance = a.getResistance() + b.getResistance();
+	}
+	
+	public void setPotentialDiff() {
+		Parallel p1 = new Parallel();
+		Parallel p2 = new Parallel();
+		if(a.getClass() == resis1.getClass() && b.getClass() == resis2.getClass()) {
+			Resistor resis1 = (Resistor)a;
+			Resistor resis2 = (Resistor)b;
+			if (! resis1.isExistsPotentialDiff() && ! resis2.isExistsPotentialDiff()) {
+				this.potentialDifference = a.getPotentialDiff() + b.getPotentialDiff();
+			} else if (! resis1.isExistsPotentialDiff()) {
+				this.current = a.getPotentialDiff()/a.getResistance();
+				this.potentialDifference = a.getPotentialDiff() + this.current*b.getResistance();
+			} else if (! resis2.isExistsPotentialDiff()) {
+				this.current = b.getCurrent();
+				this.potentialDifference = b.getPotentialDiff() + this.current*a.getResistance();
+			}
+		} else if(a.getClass() == p1.getClass() && b.getClass() == p2.getClass()) {
+			p1 = (Parallel)a;
+			p2 = (Parallel)b;
+			if (! p1.isExistsPotentialDiff() && ! p2.isExistsPotentialDiff()) {
+				this.potentialDifference = a.getPotentialDiff() + b.getPotentialDiff();
+			} else if (! p1.isExistsPotentialDiff()) {
+				this.current = a.getPotentialDiff()/a.getResistance();
+				this.potentialDifference = a.getPotentialDiff() + this.current*b.getResistance();
+			} else if (! p2.isExistsPotentialDiff()) {
+				this.current = b.getCurrent();
+				this.potentialDifference = b.getPotentialDiff() + this.current*a.getResistance();
+			}
+		} else if(a.getClass() == p1.getClass()) {
+			p1 = (Parallel)a;
+			Resistor resis2 = (Resistor)b;
+			if (! p1.isExistsPotentialDiff() && ! resis2.isExistsPotentialDiff()) {
+				this.potentialDifference = a.getPotentialDiff() + b.getPotentialDiff();
+			} else if (! p1.isExistsPotentialDiff()) {
+				this.current = a.getPotentialDiff()/a.getResistance();
+				this.potentialDifference = a.getPotentialDiff() + this.current*b.getResistance();
+			} else if (! resis2.isExistsPotentialDiff()) {
+				this.current = b.getCurrent();
+				this.potentialDifference = b.getPotentialDiff() + this.current*a.getResistance();
+			}
+		} else if(b.getClass() == p2.getClass()) {
+			p2 = (Parallel)b;
+			Resistor resis1 = (Resistor)a;
+			if (! resis1.isExistsPotentialDiff() && ! p2.isExistsPotentialDiff()) {
+				this.potentialDifference = a.getPotentialDiff() + b.getPotentialDiff();
+			} else if (! resis1.isExistsPotentialDiff()) {
+				this.current = a.getPotentialDiff()/a.getResistance();
+				this.potentialDifference = a.getPotentialDiff() + this.current*b.getResistance();
+			} else if (! p2.isExistsPotentialDiff()) {
+				this.current = b.getCurrent();
+				this.potentialDifference = b.getPotentialDiff() + this.current*a.getResistance();
+			}
+		}
+	}
+	
+
+	public void applyPotentialDiff(double V) {
+		potentialDifference = V;
+	}
+	
+	public double getResistance() {
+		return resistance;
+	}
+	
+	public double getPower() {
+		return getPotentialDiff()/(getResistance()*getResistance());
+	}
+	
+	
+	public double getPotentialDiff() {
+		return this.potentialDifference;
+	}
+	
+	public boolean isExistsPotentialDiff() { 
+		return (this.getPotentialDiff() == 0);
+	}
+	
+	public double getCurrent() {
+		return getPotentialDiff()/getResistance();
+	}
+	
+}
