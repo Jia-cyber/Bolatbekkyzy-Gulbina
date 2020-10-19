@@ -1,0 +1,49 @@
+package problem5;
+
+public class Resistor extends Circuit{
+	private double resistance;
+	
+	// Series: R(eq) = R1+ R2 + R3 +...
+	// Parallel: 1/R(eq) = 1/R1 + 1/R2 + 1/R3 + ...
+	
+	private double potentialDifference;
+	
+	public Resistor() { }
+	
+	public Resistor(double a) {
+		this.resistance = a;  
+	}
+	
+//	public void setPotentialDifference(double potentialDifference) {
+//		this.potentialDifference = getCurrent() * getResistance();
+//	}
+	
+	public double getPotentialDiff() {
+		return this.potentialDifference;
+	}
+	
+	
+	public double getPower() {
+		return getPotentialDiff()/(getResistance()*getResistance());
+	}
+
+	public void applyPotentialDiff(double V) {
+		potentialDifference = V; 
+	}
+	
+	public boolean isExistsPotentialDiff() { 
+		return (this.getPotentialDiff() == 0);
+	}
+	
+	public void setPotentialDiff() {
+		this.potentialDifference = potentialDifference;
+	}
+	
+	public double getResistance() {
+		return resistance;
+	}
+	
+	public double getCurrent() {
+		return getPotentialDiff()/getResistance();
+	}
+}
