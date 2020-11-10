@@ -1,0 +1,12 @@
+package problem2;
+
+public class Car implements Moveable{
+	double speed = 0;
+	
+	public Car() { }
+	
+	public void move() {
+		this.speed += 10;
+	}
+
+}
