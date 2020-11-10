@@ -1,0 +1,61 @@
+package problem4;
+
+import java.util.Collections;
+import java.util.Vector;
+
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+public class Testing {
+
+	public static void main(String[] args) throws ParseException, CloneNotSupportedException {
+		Employee e1 = new Employee("Alan", 3003, new SimpleDateFormat("dd-MM-yyyy").parse("01-01-2020"), "102");
+		Employee e2 = new Employee("Asiya", 3000, new SimpleDateFormat("dd-MM-yyyy").parse("21-11-2019"), "101");
+		Employee e3 = new Employee("Madina", 3500, new SimpleDateFormat("dd-MM-yyyy").parse("31-11-2019"), "202");
+		Employee e4 = new Employee("Gulbina", 3500, new SimpleDateFormat("dd-MM-yyyy").parse("05-11-2020"), "1000");
+		Manager m1 = new Manager("Elisa", 5000, new SimpleDateFormat("dd-MM-yyyy").parse("01-01-2010"), "102", 20);
+		Manager m2 = new Manager("Wickhem", 4500, new SimpleDateFormat("dd-MM-yyyy").parse("11-09-2011"), "122", 40);
+		Manager m3 = new Manager("Elon", 5000, new SimpleDateFormat("dd-MM-yyyy").parse("20-02-2010"), "1022", 10);
+		Manager m4 = new Manager("Mattew", 5500, new SimpleDateFormat("dd-MM-yyyy").parse("14-12-2009"), "1102", 30);
+		Manager m5 = new Manager("Alex", 4500, new SimpleDateFormat("dd-MM-yyyy").parse("10-01-2005"), "111", 70);
+		
+		m1.add(e1);
+		m1.add(e2);
+		m1.add(e3);
+		
+		m2.add(e4);
+		m2.add(e1);
+		
+		Vector <Manager> mm1 = new Vector<Manager>();
+		Vector <Employee> ee1 = new Vector<Employee>();
+		mm1.add(m1);
+		mm1.add(m2);
+		mm1.add(m3);
+		mm1.add(m4);
+		mm1.add(m5);
+		ee1.add(e1);
+		ee1.add(e2);
+		ee1.add(e3);
+		ee1.add(e4);
+		
+		Collections.sort(mm1);
+		Collections.sort(m1.getEmpolyees());
+		Collections.sort(ee1, new ComparatorByName());
+		
+		System.out.println("Sorting first manager's  employee: \n" + m1.getEmpolyees());
+		
+		System.out.println("\nSorting by salary: \n");
+		System.out.println(mm1);
+		
+		Collections.sort(mm1, new ComporatorByHireDate());
+		System.out.println("\nSorting by Hire date: \n");
+		System.out.println(mm1);
+		
+		System.out.println("\nSorting by name: \n" + ee1);
+		
+		Manager copyM = (Manager)m1.clone();
+		System.out.println("\n\n" + m1 + "\n" + copyM);
+	}
+
+}
