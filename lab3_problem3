@@ -1,0 +1,21 @@
+package problem3;
+
+public interface MyCollection {
+	
+	public void addElement(Object o);
+	
+	public void removeElement(Object o);
+	
+	public boolean isEmpty();
+	
+	public void clear();
+	
+	public int size();
+	
+	public void print(); 
+	
+	public boolean contains(Object o);
+	
+	public Object next(); // return the next object/element
+	
+}
