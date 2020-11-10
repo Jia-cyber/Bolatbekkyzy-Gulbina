@@ -1,0 +1,57 @@
+package problem4;
+
+import java.sql.Date;
+import java.util.Collections;
+import java.util.Vector;
+
+public class Manager extends Employee{
+	double bonus; 
+	public Manager() { }
+	
+	Vector<Employee>employees = new Vector<Employee>();
+	
+	public Manager(String name, double salary, java.util.Date hireDate, String insuranceNumber, double bonus) {
+		super(name, salary, hireDate, insuranceNumber);
+		this.bonus = bonus;
+	}
+	
+	public String toString() {
+		return super.toString() + " Bonus: " + this.bonus;
+	}
+	
+	public void add(Employee e) {
+		employees.add(e);
+	}
+	
+	public Vector getEmpolyees() {
+		return employees;
+	}
+	
+	public boolean equals (Object o) {
+		if(! super.equals(o)) {
+			return false;
+		} Manager m = (Manager)o;
+		return super.equals(o) && this.bonus == m.bonus;
+	}
+	
+	public int compareTo(Employee o) {
+		if(super.compareTo(o) == 0) {
+			Manager m = (Manager)o;
+			if(bonus < m.bonus) return -1;
+			if(bonus > m.bonus) return 1;
+			return 0; 
+		} return super.compareTo(o);
+	}
+	
+	public void sorting() {
+		Collections.sort(employees);
+	}
+	
+	public Object clone() throws CloneNotSupportedException {
+		Manager copy = (Manager)super.clone(); 
+		copy.hireDate = (java.util.Date)this.hireDate.clone();
+		copy.employees = (Vector<Employee>)employees;
+		return copy;
+	}
+	
+}
