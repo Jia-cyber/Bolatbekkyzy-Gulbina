@@ -1,0 +1,50 @@
+package problem5;
+
+public class Sort {
+
+	static <E> void swap (E [] array, int i, int j) {
+		E temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+	}
+	
+	static <E extends Comparable <E>> void quickSort(E [] array, int left, int right){
+        if (array.length == 0)
+            return;
+ 
+        if (left >= right)
+            return;
+ 
+        int middle = (right + left) / 2;
+        E pivot = array[middle];
+ 
+        int i = left, j = right;
+        
+        while (i < j) {
+            while(array[i].compareTo(pivot) < 0) {
+                i++;
+            }
+ 
+            while (array[j].compareTo(pivot) > 0) {
+                j--;
+            }
+ 
+            if (i <= j) {
+                swap(array, i, j);
+                i++;
+                j--;
+            }
+            
+        }
+        
+        if (left < j) {
+            quickSort(array, left, j);
+        }
+        
+        if (right > i) {
+        	quickSort(array, i, right);
+        }
+        
+	}
+	
+}
