@@ -1,0 +1,51 @@
+package problem4;
+
+import java.util.Date;
+
+public class Employee extends Person implements Comparable<Employee>{
+	double salary;
+	Date hireDate;
+	private String insuranceNumber;
+	
+	public Employee() { }
+	
+	public Employee(String name, double salary, java.util.Date hireDate, String insuranceNumber) {
+		super(name);
+		this.hireDate = hireDate;
+		this.salary = salary;
+		this.insuranceNumber = insuranceNumber;
+	}
+
+	public boolean equals(Object o) {
+		if (! super.equals(o)) {
+			return false;
+		} Employee e = (Employee) o;
+		return super.equals(o) && e.salary == this.salary && e.insuranceNumber == this.insuranceNumber && this.hireDate.equals(e.hireDate);
+	}
+	
+	public String toString() {
+		return super.toString() + " Salary: " + this.salary + " Hire Date: " + hireDate + " Insurace Number: " + this.insuranceNumber;
+	}
+	
+	public String getInsuranceNumber() {
+		return this.insuranceNumber;
+	}
+	
+	public void setSalary(double salary) {
+		this.salary = salary;
+	}
+
+	public int compareTo(Employee o) {
+		if(salary < o.salary) return -1;
+		if(salary > o.salary) return 1;
+		return 0;
+	}
+	
+	public Object clone() throws CloneNotSupportedException {
+		Employee copy = (Employee) super.clone();
+		copy.hireDate = (java.util.Date)this.hireDate.clone();
+		return copy;
+	}
+	
+	
+}
